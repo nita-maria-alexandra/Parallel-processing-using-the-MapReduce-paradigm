@@ -1,0 +1,65 @@
+Tema1
+Nita Maria-Alexandra 334CA
+
+Pentru a stoca datele din input am creat o structura "mapper_str", in care
+retin:
+    - numarul de mapperi;
+    - numarul de reduceri; 
+    - 2 referinte la mutex;
+    - o referinta la bariera; 
+    - un vector in care o sa retin cate un vector cu numerele care sunt puteri
+     perfecte(indice_vector = vector cu numerele puteri perfecte cu exponentul 
+     indice_vector + 2), numere ce sa gasesc in fisierele citite de fiecare 
+     mapper;
+    - referinta la un vector de vectori, asemanator cu cel precedent, pe care 
+    l-am populat cu numere puteri perfecte(indice_vector = vector cu numerele 
+    puteri perfecte cu exponentul indice_vector);
+    - referinta la o coada de prioritati, in care retin marimea fisierelor
+    din fisierul principal si numele acestora.
+
+Structura "sizeF" am folosit-o pentru a putea stoca datele in coada de 
+prioritati, asa cum am precizat mai sus.
+
+Structura "compareF" am folosit-o pentru a putea adauga datele in coada in ordine 
+descrescatoare, in functie de marimea fisierelor.
+
+Structura "reducer_str" am folosit-o pentru a stoca informatii necesare fiecarui
+reducer:
+    - referinta la vectorul de mapperi;
+    - indicele reducer-ului;
+    - referinta la bariera;
+    - numarul de mapperi.
+
+Functia "read_input" :
+    - salveaza argumentele primite in linia de comanda;
+    - citeste fisierul principal si creeaza coada de prioritati, dupa ce 
+    calculeaza marimea fiecarui fisier, deci fiecare fisier este deschis,
+    respectiv inchis, pentru a se afla dimensiunea lui.
+
+ Functia "mapper":
+    - cat timp coada de prioritati nu este goala, se extrage din ea numele
+    unui fisier, se deschide fisierul, se salveaza numerele intr-un vector
+    si se proceseaza, pe rand:
+        - daca numarul este diferit de 1, verific daca numarul este putere 
+        perfecta(cautare binara a numarului in vectorul care contine numere
+        puteri perfecte), folosind un for de la 2 la numarul de reduceri + 1,
+        pentru a sti pe ce pozitie sa adaug in vectorul mapper-ului si in ce
+        pozitie sa caut in vectorul creat in main;
+        - daca numarul este 1, atunci adaug valoarea 1 in toti vectorii din
+        vectorul de  vectori de numere intregi al mapper-ului.
+    - folosesc doua mutex-uri, unul inainte sa extrag din coada si dupa il
+    deblochez, si pe celalalt atunci cand adaug in vectorul mapper-ului si
+    il deblochez imediat dupa ce termin de adaugat, pentru a evita ca mai multe
+    thread-uri sa acceseze simultan aceeasi zona de memorie;
+    - folosesc o bariera la finalul functiei, pentru a ma asigura ca 
+    thread-urile ajung in acelasi timp la urmatorul pas.
+
+Functia "reducer":
+    - la inceput am folosit o bariera pentru a ma asigura ca toti mapperii
+    si-au terminat treaba inainte ca reducerii sa inceapa;
+    - am inserat intr-un unordered set toate valorile corespunzatoare 
+    exponentului E, gasite de mapperi;
+    - am creat fisierul de iesire, in care am afisat lungimea unordered 
+    set-ului.
+
+In main am pornit in acelasi timp thread-urile de tip mapper si reducer.
